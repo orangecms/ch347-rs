@@ -1,4 +1,3 @@
-use ch347_rs;
 use clap::{Parser, Subcommand, ValueEnum};
 
 #[derive(Parser, Debug)]
@@ -6,7 +5,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 pub struct CmdGpio {
     /// device number
     #[clap(value_parser)]
-    index: u32,
+    index: u64,
 
     /// gpio mask, eg. hex: 0xFF or FFH dec:64 bin:0b0000_0011
     #[clap(value_parser)]
@@ -19,7 +18,7 @@ pub struct CmdGpio {
 #[derive(ValueEnum, Subcommand, Clone, Debug)]
 pub enum Commands {
     Status,
-    PWM,
+    Pwm,
     High,
     Low,
     Read,
@@ -29,14 +28,14 @@ fn parse_gpio_dir(a: u8, bit: u8) -> &'static str {
     if a & (1 << bit) != 0 {
         return "Out";
     }
-    return "In";
+    "In"
 }
 
 fn parse_gpio_data(a: u8, bit: u8) -> &'static str {
     if a & (1 << bit) != 0 {
         return "High";
     }
-    return "Low";
+    "Low"
 }
 
 pub fn cli_operator_gpio(args: &CmdGpio) {
@@ -65,7 +64,7 @@ pub fn cli_operator_gpio(args: &CmdGpio) {
                 );
             }
         }
-        Commands::PWM => {
+        Commands::Pwm => {
             let mut gpio_dir: u8 = 0;
             let mut gpio_data: u8 = 0;
 
