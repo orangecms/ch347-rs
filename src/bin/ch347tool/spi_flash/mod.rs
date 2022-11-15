@@ -59,17 +59,21 @@ impl CmdSpiFlash {
         println!("Select SPI Clock: {}", clock_level);
 
         let mut device = ch347_rs::Ch347Device::new(self.index)?;
+        println!("change dev config");
         device.change_spi_raw_config(|spi_cfg| {
             spi_cfg.byte_order = 1;
             spi_cfg.clock = self.freq;
         })?;
+        println!("init SPI flash");
         let device = device.spi_flash()?;
 
+        println!("detect flash");
         let chip_info = match device.detect() {
             Err(e) => return Err(e.into()),
             Ok(chip_info) => chip_info,
         };
 
+        println!("eval flash info");
         let unique_id = match device.read_uuid(chip_info.vendor) {
             Err(e) => format!("{}: {}", console::style("error").red(), e),
             Ok(chip_uuid) => format!("{} Bit {:02X?}", chip_uuid.len() * 8, chip_uuid),

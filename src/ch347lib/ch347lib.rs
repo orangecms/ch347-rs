@@ -288,12 +288,15 @@ impl Ch347Device {
     }
 
     pub fn apply_spi_config(&mut self) -> Result<(), &'static str> {
+        println!("spi config apply");
         unsafe {
             if CH347SPI_Init(self.index, &mut self.spi_cfg) == 0 {
+                println!("spi config error");
                 return Err("CH347SPI_Init Fail");
             }
         }
 
+        println!("spi config applied");
         Ok(())
     }
 
